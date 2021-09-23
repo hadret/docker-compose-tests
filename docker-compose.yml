@@ -1,0 +1,169 @@
+version: "3"
+services:
+
+  bpfcc-bionic:
+    build:
+      context: .
+      dockerfile: Dockerfile.bpfcc
+      args:
+        release: bionic
+    image: hadret/bpfcc:bionic
+    privileged: true 
+    volumes:
+      - /lib/modules:/lib/modules:ro
+      - /usr/src:/usr/src:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /sys/kernel/debug:/sys/kernel/debug:ro
+      - /sys/kernel/tracing:/sys/kernel/tracing:ro
+    command: >
+      bash -c "apt-cache policy bpfcc-tools
+      && apt-cache policy bpftrace
+      && /usr/bin/bpftrace --version
+      && /usr/sbin/execsnoop-bpfcc"
+    profiles:
+      - bpfcc
+
+  bpfcc-focal:
+    build:
+      context: .
+      dockerfile: Dockerfile.bpfcc
+      args:
+        release: focal
+    image: hadret/bpfcc:focal
+    privileged: true 
+    volumes:
+      - /lib/modules:/lib/modules:ro
+      - /usr/src:/usr/src:ro
+      - /etc/localtime:/etc/localtime:ro
+    command: >
+      bash -c "apt-cache policy bpfcc-tools
+      && apt-cache policy bpftrace
+      && /usr/bin/bpftrace --version
+      && /usr/sbin/execsnoop-bpfcc"
+    profiles:
+      - bpfcc
+
+  bpfcc-hirsute:
+    build:
+      context: .
+      dockerfile: Dockerfile.bpfcc
+      args:
+        release: hirsute
+    image: hadret/bpfcc:hirsute
+    privileged: true 
+    volumes:
+      - /lib/modules:/lib/modules:ro
+      - /usr/src:/usr/src:ro
+      - /etc/localtime:/etc/localtime:ro
+    command: >
+      bash -c "apt-cache policy bpfcc-tools
+      && apt-cache policy bpftrace
+      && /usr/bin/bpftrace --version
+      && /usr/sbin/execsnoop-bpfcc"
+    profiles:
+      - bpfcc
+
+  mainline-bionic:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+      args:
+        branch: -mainline
+        release: "bionic"
+    image: hadret/nginx-mainline:bionic
+    ports:
+      - "13371:80"
+    command: >
+      bash -c "apt-cache policy nginx-extras
+      && nginx -v && nginx -V && nginx -t
+      && nginx -g 'daemon off;'"
+    profiles:
+      - nginx
+      - mainline
+
+  mainline-focal:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+      args:
+        branch: -mainline
+        release: focal
+    image: hadret/nginx-mainline:focal
+    ports:
+      - "13372:80"
+    command: >
+      bash -c "apt-cache policy nginx-extras
+      && nginx -v && nginx -V && nginx -t
+      && nginx -g 'daemon off;'"
+    profiles:
+      - nginx
+      - mainline
+
+  mainline-hirsute:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+      args:
+        branch: -mainline
+        release: "hirsute"
+    image: hadret/nginx-mainline:hirsute
+    ports:
+      - "13373:80"
+    command: >
+      bash -c "apt-cache policy nginx-extras
+      && nginx -v && nginx -V && nginx -t
+      && nginx -g 'daemon off;'"
+    profiles:
+      - nginx
+      - mainline
+
+  stable-bionic:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+      args:
+        release: "bionic"
+    image: hadret/nginx-stable:bionic
+    ports:
+      - "11337:80"
+    command: >
+      bash -c "apt-cache policy nginx-extras
+      && nginx -v && nginx -V && nginx -t
+      && nginx -g 'daemon off;'"
+    profiles:
+      - nginx
+      - stable
+
+  stable-focal:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+      args:
+        release: focal
+    image: hadret/nginx-stable:focal
+    ports:
+      - "21337:80"
+    command: >
+      bash -c "apt-cache policy nginx-extras
+      && nginx -v && nginx -V && nginx -t
+      && nginx -g 'daemon off;'"
+    profiles:
+      - nginx
+      - stable
+
+  stable-hirsute:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+      args:
+        release: "hirsute"
+    image: hadret/nginx-stable:hirsute
+    ports:
+      - "31337:80"
+    command: >
+      bash -c "apt-cache policy nginx-extras
+      && nginx -v && nginx -V && nginx -t
+      && nginx -g 'daemon off;'"
+    profiles:
+      - nginx
+      - stable

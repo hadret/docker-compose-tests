@@ -1,0 +1,21 @@
+# vim:set ft=dockerfile:
+ARG   release
+FROM  ubuntu:${release}
+LABEL maintainer="Filip Chabik <hadret@hey.com>"
+
+RUN set -x \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends --no-install-suggests \
+                                             gpg-agent \
+                                             software-properties-common \
+    && add-apt-repository ppa:hadret/bpfcc \
+    && add-apt-repository ppa:hadret/bpftrace \
+    && apt-get update \
+    && apt-get install -y bpftrace bpfcc-tools \
+    && apt-get remove -y --purge --auto-remove apt-transport-https \
+                                                   ca-certificates \
+                                                         gpg-agent \
+                                        software-properties-common \
+    && rm -rf /var/lib/apt/lists/*
+
+CMD ["/bin/bash"]
