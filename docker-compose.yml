@@ -63,6 +63,26 @@ services:
     profiles:
       - bpfcc
 
+  bpfcc-impish:
+    build:
+      context: .
+      dockerfile: Dockerfile.bpfcc
+      args:
+        release: impish
+    image: hadret/bpfcc:impish
+    privileged: true
+    volumes:
+      - /lib/modules:/lib/modules:ro
+      - /usr/src:/usr/src:ro
+      - /etc/localtime:/etc/localtime:ro
+    command: >
+      bash -c "apt-cache policy bpfcc-tools
+      && apt-cache policy bpftrace
+      && /usr/bin/bpftrace --version
+      && /usr/sbin/execsnoop-bpfcc"
+    profiles:
+      - bpfcc
+
   mainline-bionic:
     build:
       context: .
@@ -117,6 +137,24 @@ services:
       - nginx
       - mainline
 
+  mainline-impish:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+      args:
+        branch: -mainline
+        release: "impish"
+    image: hadret/nginx-mainline:impish
+    ports:
+      - "13374:80"
+    command: >
+      bash -c "apt-cache policy nginx-extras
+      && nginx -v && nginx -V && nginx -t
+      && nginx -g 'daemon off;'"
+    profiles:
+      - nginx
+      - mainline
+
   stable-bionic:
     build:
       context: .
@@ -158,6 +196,23 @@ services:
       args:
         release: "hirsute"
     image: hadret/nginx-stable:hirsute
+    ports:
+      - "31337:80"
+    command: >
+      bash -c "apt-cache policy nginx-extras
+      && nginx -v && nginx -V && nginx -t
+      && nginx -g 'daemon off;'"
+    profiles:
+      - nginx
+      - stable
+
+  stable-impish:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+      args:
+        release: "impish"
+    image: hadret/nginx-stable:impish
     ports:
       - "31337:80"
     command: >
