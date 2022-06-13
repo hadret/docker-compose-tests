@@ -43,33 +43,13 @@ services:
     profiles:
       - bpfcc
 
-  bpfcc-hirsute:
+  bpfcc-jammy:
     build:
       context: .
       dockerfile: Dockerfile.bpfcc
       args:
-        release: hirsute
-    image: hadret/bpfcc:hirsute
-    privileged: true 
-    volumes:
-      - /lib/modules:/lib/modules:ro
-      - /usr/src:/usr/src:ro
-      - /etc/localtime:/etc/localtime:ro
-    command: >
-      bash -c "apt-cache policy bpfcc-tools
-      && apt-cache policy bpftrace
-      && /usr/bin/bpftrace --version
-      && /usr/sbin/execsnoop-bpfcc"
-    profiles:
-      - bpfcc
-
-  bpfcc-impish:
-    build:
-      context: .
-      dockerfile: Dockerfile.bpfcc
-      args:
-        release: impish
-    image: hadret/bpfcc:impish
+        release: jammy
+    image: hadret/bpfcc:jammy
     privileged: true
     volumes:
       - /lib/modules:/lib/modules:ro
@@ -119,32 +99,14 @@ services:
       - nginx
       - mainline
 
-  mainline-hirsute:
+  mainline-jammy:
     build:
       context: .
       dockerfile: Dockerfile.nginx
       args:
         branch: -mainline
-        release: "hirsute"
-    image: hadret/nginx-mainline:hirsute
-    ports:
-      - "13373:80"
-    command: >
-      bash -c "apt-cache policy nginx-extras
-      && nginx -v && nginx -V && nginx -t
-      && nginx -g 'daemon off;'"
-    profiles:
-      - nginx
-      - mainline
-
-  mainline-impish:
-    build:
-      context: .
-      dockerfile: Dockerfile.nginx
-      args:
-        branch: -mainline
-        release: "impish"
-    image: hadret/nginx-mainline:impish
+        release: "jammy"
+    image: hadret/nginx-mainline:jammy
     ports:
       - "13374:80"
     command: >
@@ -189,30 +151,13 @@ services:
       - nginx
       - stable
 
-  stable-hirsute:
+  stable-jammy:
     build:
       context: .
       dockerfile: Dockerfile.nginx
       args:
-        release: "hirsute"
-    image: hadret/nginx-stable:hirsute
-    ports:
-      - "31337:80"
-    command: >
-      bash -c "apt-cache policy nginx-extras
-      && nginx -v && nginx -V && nginx -t
-      && nginx -g 'daemon off;'"
-    profiles:
-      - nginx
-      - stable
-
-  stable-impish:
-    build:
-      context: .
-      dockerfile: Dockerfile.nginx
-      args:
-        release: "impish"
-    image: hadret/nginx-stable:impish
+        release: "jammy"
+    image: hadret/nginx-stable:jammy
     ports:
       - "31337:80"
     command: >
